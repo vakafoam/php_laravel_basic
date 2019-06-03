@@ -5,3 +5,10 @@ $ php artisan tinker
 
 
 $ php artisan migrate 
+
+
+// Seeding the DB
+$ php artisan make:seed PostTableSeeder    // seeder for DB, update run() method with data
+    -> update seeders run() method
+$ composer dump-autoload                    // generate new class map to discover new Seeders
+$ php artisan db:seed
