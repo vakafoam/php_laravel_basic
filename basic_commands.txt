@@ -1,0 +1,7 @@
+$ php artisan make:migration create_posts_table
+
+// Enter command line to execute php commands
+$ php artisan tinker
+
+
+$ php artisan migrate 
