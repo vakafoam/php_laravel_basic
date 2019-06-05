@@ -11,4 +11,9 @@ class Post extends Model
     {
         return $this->hasMany('App\Like');
     }
-}  
+
+    public function tags() 
+    {
+        return $this->belongsToMany('App\Tag')->withTimestamps();
+    }
+}   

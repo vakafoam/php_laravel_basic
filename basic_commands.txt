@@ -16,3 +16,9 @@ $ php artisan db:seed
 
 // When Models change, refresh migrations by
 $ php artisan migrate:refresh --seed 
+
+
+// Many-To-Many Relationship
+$ php artisan make:migration create_post_tag_table
+    -> udate table migration fields to have post_id and tag_id
+$ php artisan migrate

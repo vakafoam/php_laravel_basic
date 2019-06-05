@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\Like;
+use App\Tag;
 use Illuminate\Http\Request;
 
 
@@ -29,7 +30,7 @@ class PostController extends Controller
     public function getPost($id)
     {
         // $post = Post::find($id); //short, or
-        $post = Post::where('id', '=', $id)->first();
+        $post = Post::where('id', '=', $id)->with('likes')->first(); // with() Eagerly pre-loads the connected likes too 
         return view('blog.post', ['post' => $post]);
     }
 
@@ -43,14 +44,16 @@ class PostController extends Controller
 
     public function getAdminCreate()
     {
-        return view('admin.create');
+        $tags = Tag::all();
+        return view('admin.create', ['tags' => $tags]);
     }
 
     public function getAdminEdit($id)
     {
         // $post = Post::find($id); //short, or
         $post = Post::where('id', '=', $id)->first();
-        return view('admin.edit', ['post' => $post, 'postId' => $id]);
+        $tags = Tag::all();
+        return view('admin.edit', ['post' => $post, 'postId' => $id, 'tags' => $tags]);
     }
 
     public function postAdminCreate(Request $request)
@@ -64,6 +67,7 @@ class PostController extends Controller
             'content'=> $request->input('content'),
         ]);
         $post->save();
+        $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
 
         // $post->addPost($session, $request->input('title'), $request->input('content')); //dummy data
 
@@ -80,12 +84,16 @@ class PostController extends Controller
         $post->title = $request->input('title');
         $post->content = $request->input('content');
         $post->save();
+        // $post->tags()->detach();
+        // $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
+        $post->tags()->sync($request->input('tags') === null ? [] : $request->input('tags'));  // a more efficient way to do the above 2 lines
         return redirect()->route('admin.index')->with('info', 'Post edited, new Title is: ' . $request->input('title'));
     }
 
     public function getAdminDelete($id) {
         $post = Post::find($id);
         $post->likes()->delete(); // if you delete a Post, remove the connections too
+        $post->tags()->detach();
         $post->delete();  // hard deletion (if you want to be able to restore it, use Soft Delete)
         return redirect()->route('admin.index')->with('info', 'Post ' .$post->title . ' deleted!');
     }
