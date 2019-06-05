@@ -12,3 +12,7 @@ $ php artisan make:seed PostTableSeeder    // seeder for DB, update run() method
     -> update seeders run() method
 $ composer dump-autoload                    // generate new class map to discover new Seeders
 $ php artisan db:seed
+
+
+// When Models change, refresh migrations by
+$ php artisan migrate:refresh --seed 

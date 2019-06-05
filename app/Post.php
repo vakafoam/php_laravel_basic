@@ -7,5 +7,8 @@ class Post extends Model
 {
     protected $fillable = ['title', 'content'];
 
-    // no dummy data any more
-}
+    public function likes() 
+    {
+        return $this->hasMany('App\Like');
+    }
+}  
