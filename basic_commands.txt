@@ -22,3 +22,7 @@ $ php artisan migrate:refresh --seed
 $ php artisan make:migration create_post_tag_table
     -> udate table migration fields to have post_id and tag_id
 $ php artisan migrate
+
+
+// Adding 3rd party packages 
+$ php artisan vendor:publish --tag= . . . 

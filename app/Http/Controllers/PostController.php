@@ -16,7 +16,7 @@ class PostController extends Controller
         // or alternative approach is DB::table('posts')-> ...
         // or to sort:
 
-        $posts = Post::orderBy('created_at', 'desc')->get();
+        $posts = Post::orderBy('created_at', 'desc')->paginate(1); //paginate posts
 
         return view('blog.index', ['posts' => $posts]);
     }

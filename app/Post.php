@@ -16,4 +16,16 @@ class Post extends Model
     {
         return $this->belongsToMany('App\Tag')->withTimestamps();
     }
+
+     // Mutator function that transforms value automatically before storing to DB
+    public function setTitleAttribute($value) // naming convention 
+    {
+        $this->attributes['title'] = strtolower($value); 
+    }
+
+    // Accessor funcion that transforms value automatically after read from DB
+    public function getTitleAttribute($value) // naming convention
+    {
+        return strtoupper($value);
+    }
 }   
