@@ -62,3 +62,9 @@ Route::group(['prefix' => 'admin'], function() {
     ]);
 });
 Auth::routes();
+
+// Custom Auth routes should go after the default ones
+Route::post('login', [
+    'uses' => 'SigninController@signin',
+    'as' => 'auth.signin'
+]); 

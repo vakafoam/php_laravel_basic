@@ -6,6 +6,7 @@ use App\Post;
 use App\Like;
 use App\Tag;
 use Auth;
+use Gate;
 use Illuminate\Http\Request;
 
 
@@ -24,6 +25,9 @@ class PostController extends Controller
 
     public function getAdminIndex()
     {
+        if (!Auth::check()) {
+            return redirect()->back();
+        }
         $posts = Post::orderBy('created_at', 'desc')->get();
         return view('admin.index', ['posts' => $posts]);
     }
@@ -45,12 +49,18 @@ class PostController extends Controller
 
     public function getAdminCreate()
     {
+        if (!Auth::check()) {
+            return redirect()->back();
+        }
         $tags = Tag::all();
         return view('admin.create', ['tags' => $tags]);
     }
 
     public function getAdminEdit($id)
     {
+        if (!Auth::check()) {
+            return redirect()->back();
+        }
         // $post = Post::find($id); //short, or
         $post = Post::where('id', '=', $id)->first();
         $tags = Tag::all();
@@ -81,11 +91,17 @@ class PostController extends Controller
 
     public function postAdminUpdate(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->back();
+        }
         $this->validate($request, [
             'title' => 'required|min:5',
             'content' => 'required|min:10'
         ]);
         $post = Post::find($request->input('id'));
+        if (Gate::denies('manipulate-post', $post)) {
+             return redirect()->back();
+        }
         $post->title = $request->input('title');
         $post->content = $request->input('content');
         $post->save();
@@ -96,7 +112,13 @@ class PostController extends Controller
     }
 
     public function getAdminDelete($id) {
+        if (!Auth::check()) {
+            return redirect()->back();
+        }
         $post = Post::find($id);
+        if (Gate::denies('manipulate-post', $post)) {
+            return redirect()->back();
+        }
         $post->likes()->delete(); // if you delete a Post, remove the connections too
         $post->tags()->detach();
         $post->delete();  // hard deletion (if you want to be able to restore it, use Soft Delete)
