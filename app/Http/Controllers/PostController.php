@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\Like;
 use App\Tag;
+use Auth;
 use Illuminate\Http\Request;
 
 
@@ -62,11 +63,15 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required|min:10'
         ]);
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->back();
+        }
         $post = new Post([    // array of fileds that are declared fillable in Post model
             'title'=> $request->input('title'),
             'content'=> $request->input('content'),
         ]);
-        $post->save();
+        $user->posts()->save($post);
         $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
 
         // $post->addPost($session, $request->input('title'), $request->input('content')); //dummy data
