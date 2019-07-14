@@ -31,3 +31,8 @@ $ php artisan vendor:publish --tag= . . .
 ////// Authentication 
 $ php artisan make:auth   //creates all needed routes/controllers/pages for auth
 $ php artisan migrate:refresh  //roll back old migrations, override with new
+
+
+//// Notifications
+
+$ php artisan make:notification [name]

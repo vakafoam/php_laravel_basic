@@ -2,13 +2,14 @@
 
 namespace App;
 
+use App\Notifications\CustomPasswordReset;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable;  // enables sending notifications
 
     /**
      * The attributes that are mass assignable.
@@ -31,5 +32,11 @@ class User extends Authenticatable
     public function posts() 
     {
         return $this->hasMany('App\Post');
+    }
+
+    // overriding the default function and providing our own notification service
+    public function sendPasswordResetNotification($token) 
+    {
+        $this->notify(new CustomPasswordReset($token));
     }
 }

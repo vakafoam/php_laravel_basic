@@ -20,7 +20,7 @@ class SigninController extends Controller
                 [
                     'email' => $request->input('email'),
                     'password' => $request->input('password')
-                ], $request->has('remember'))) 
+                ], $request->has('remember'))) // optional remember me check functionality
         {
             // return redirect('/admin');
             return redirect()->route('admin.index'); // the same as above line
